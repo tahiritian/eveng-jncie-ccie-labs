@@ -1,0 +1,100 @@
+devices:         
+  R1:
+    local_as_number: 100
+    aggregate_routing: 10.10.4.0/22
+    interfaces:
+      - name: ge-0/0/0
+        description: Connected to R2
+        unit: 0
+        ip: 10.10.4.1/24
+      - name: ge-0/0/1
+        description: Connected to R3
+        unit: 0
+        ip: 10.10.5.1/24
+      - name: ge-0/0/2
+        description: Connected to R4
+        unit: 0
+        ip: 10.10.6.1/24
+      - name: ge-0/0/5
+        description: Connected to ISP
+        unit: 0
+        ip: 172.16.1.1/24
+
+    sys_options:
+      - name: R1
+    policy_options:
+      - term-1:
+        policy: aggregate-route
+        protocol: direct
+        route: 10.10.4.0/22 
+    export_route:         
+      - term-1:
+        policy: export-route
+        protocol: aggregate
+        route: 10.10.4.0/22
+
+    routing:
+      bgp:   
+        external_neighbors:
+          - ip_address: 172.16.1.2
+            as_number: 200
+ 
+    ospf_area_number: 0.0.0.0
+    r2: ge-0/0/0;
+    r3: ge-0/0/1;
+    r4: ge-0/0/2;      
+   
+    export_aggregate: export-route
+
+  ISP:
+    local_as_number: 200
+    interfaces:
+      - name: ge-0/0/5
+        description: Connected to R1
+        unit: 0
+        ip: 172.16.1.2/24
+
+    sys_options:
+      - name: ISP
+
+    routing:
+      bgp:
+        external_neighbors:
+          - ip_address: 172.16.1.1
+            as_number: 100     
+
+  R2:
+    interfaces:
+      - name: ge-0/0/0
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.4.2/24
+    sys_options:
+      - name: R2
+    ospf_area_number: 0.0.0.0
+    r2: ge-0/0/0;
+    hostname: R2
+
+  R3:
+    interfaces:
+      - name: ge-0/0/1
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.5.2/24
+    sys_options:
+      - name: R2
+    ospf_area_number: 0.0.0.0
+    r3: ge-0/0/1;
+    hostname: R2
+    
+  R4:
+    interfaces:
+      - name: ge-0/0/2
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.6.2/24
+    sys_options:
+      - name: R2
+    ospf_area_number: 0.0.0.0
+    r4: ge-0/0/2;
+    hostname: R4     

@@ -1,0 +1,33 @@
+devices:         
+  R2:
+    interfaces:
+      - name: ge-0/0/0
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.4.2/24
+    ospf_area_number: 0.0.0.0
+    r2: ge-0/0/0;    
+    r3: ge-0/0/1;
+    r4: ge-0/0/2;
+
+  R3:
+    interfaces:
+      - name: ge-0/0/1
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.5.2/24
+    ospf_area_number: 0.0.0.0
+    r2: ge-0/0/0;
+    r3: ge-0/0/1;
+    r4: ge-0/0/2;
+    
+  R4:
+    interfaces:
+      - name: ge-0/0/2
+        description: Connected to R1
+        unit: 0
+        ip: 10.10.6.2/24
+    ospf_area_number: 0.0.0.0
+    r2: ge-0/0/0;
+    r3: ge-0/0/1;
+    r4: ge-0/0/2;

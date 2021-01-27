@@ -1,0 +1,17 @@
+devices:         
+  ISP:
+    local_as_number: 200
+    interfaces:
+      - name: ge-0/0/5
+        description: Connected to R1
+        unit: 0
+        ip: 172.16.1.2/24
+
+    sys_options:
+      - name: ISP
+
+    routing:
+      bgp:
+        external_neighbors:
+          - ip_address: 172.16.1.1
+            as_number: 100 
