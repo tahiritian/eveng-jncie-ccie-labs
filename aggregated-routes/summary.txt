@@ -1,0 +1,47 @@
+## Author: Mohammad Tahir ##
+
+#### This is actual config ####
+
+R1:
+
+   Configure a policy statement to specify the routes that have to be aggregated
+# set policy-options policy-statement aggregate-route from protocol direct
+# set policy-options policy-statement aggregate-route from route-filter 10.10.4.0/22 orlonger
+# set policy-options policy-statement aggregate-route then accept
+
+ Aggregate the specified routes
+ # set routing-options aggregate route 10.10.4.0/22 policy aggregate-route
+
+ Configure a policy statement to specify the routes that have to be exported
+# set policy-options policy-statement export-route from protocol aggregate
+# set policy-options policy-statement export-route from route-filter 10.10.4.0/22 exact
+# set policy-options policy-statement export-route then accept
+
+ Apply the policy statement in the BGP configuration
+ # set protocols bgp export export-route
+
+
+###### On R1 ########
+root@R1> show route
+10.10.4.0/22 *[Aggregate/130] 00:38:43   ===>  Reject
+
+root@R1> show route 10.10.4.0/22 exact detail
+Next hop type: Reject   <==== Reject
+
+--- From other router;
+Contributing Routes (3):
+10.10.4.0/24 proto Direct
+10.10.5.0/24 proto Direct
+10.10.6.0/24 proto Direct
+
+!! Use ‘Discard’ option to an Aggregate Route !!
+root@R1# set aggregate defaults discard
+root@R1> show route
+10.10.4.0/22 *[Aggregate/130] 00:57:48
+Discard
+
+###### On ISP ######
+root@ISP> show route protocol bgp
+
+10.10.4.0/22 * [BGP/170] =====> learn'd via bgp
+

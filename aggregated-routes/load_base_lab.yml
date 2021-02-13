@@ -1,0 +1,20 @@
+---
+- name: Aggregated Routing - base configuration data on a device running Junos OS
+  hosts: agg-lab
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: load base lab
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
