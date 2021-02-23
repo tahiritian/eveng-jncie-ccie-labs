@@ -1,0 +1,117 @@
+---
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r1
+  roles:
+    - Juniper.junos 
+  connection: local
+  gather_facts: no
+      
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config: 
+        format: "text"
+        load: "set"
+        src: "r1_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response        
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r2
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r2_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r3
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r3_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r4
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r4_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: isp
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "isp_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: customerz
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "customerz.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response

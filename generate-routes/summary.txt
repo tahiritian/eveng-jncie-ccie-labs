@@ -1,0 +1,47 @@
+### Author: Mohammad Tahir ###
+** R1 injects an aggregated route to ISP using BGP.
+** If ISP receives BGP routes from R1, than ISP will inject a default route to OSPF (b/w ISP and Customer).
+** If ISP stop learning BGP route from R1., or there is connectivity lost to R1, than ISP ‘ll suppress (forcibly put an end to) default route to OSPF.
+— This ‘ll be tested by shutting down BGP link at ISP
+
+** On ISP: The generated route (BGP) and primary contributed route should have same next-hop and outgoing interface (R1)
+root@ISP> show route 0/0 exact detail
+root@ISP> show route 10.10.4.0/22
+
+— The generated route have inherited next-hop from primary Contributing Route.
+
+** On customer-Z router, check default-route 0/0 is injected: root@Customer-Z> show route 0/0
+
+** Test: When ISP lost connectivity to R1, and 0/0 is suppressed to OSPF.
+root@ISP# deactivate interfaces ge-0/0/5
+
+Now check on Customer-Z and there ‘ll be NO 0/0 route;
+root@Customer-Z> show route 0/0 exact detail
+
+--Actual Config;
+— R1:
+set routing-options aggregate route 10.10.4.0/22 policy aggregate-route
+set routing-options generate defaults preference 130
+
+set protocols bgp export export-route
+set policy-options policy-statement aggregate-route term 1 from protocol direct
+set policy-options policy-statement aggregate-route term 1 from route-filter 10.10.4.0/22 orlonger
+set policy-options policy-statement aggregate-route term 1 then accept
+set policy-options policy-statement aggregate-route term 2 then reject
+
+set policy-options policy-statement export-route from protocol aggregate
+set policy-options policy-statement export-route from route-filter 10.10.4.0/22 exact
+set policy-options policy-statement export-route then accept
+
+— ISP:
+set routing-options generate route 0.0.0.0/0 policy gen-route-policy
+set protocols ospf export default-route
+
+set policy-options policy-statement default-route term 1 from protocol aggregate
+set policy-options policy-statement default-route term 1 from route-filter 0.0.0.0/0 exact
+set policy-options policy-statement default-route term 1 then accept
+
+set policy-options policy-statement gen-route-policy term 1 from protocol bgp
+set policy-options policy-statement gen-route-policy term 1 then accept
+set policy-options policy-statement gen-route-policy term 2 then reject
+----------
