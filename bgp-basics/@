@@ -1,0 +1,37 @@
+---
+- name: "Disable ge-0/0/5 on ISP Device" 
+  hosts: isp
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Configure op script"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set interfaces ge-0/0/5 disable"   
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+
+- name: ISP interface and BGP status
+  hosts: isp
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Running checks on ISP
+      junos_command:
+        commands:
+          - show bgp summ
+          - show int ge-0/0/5 |match Down
+          - show route 0/0 exact detail hidden  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 

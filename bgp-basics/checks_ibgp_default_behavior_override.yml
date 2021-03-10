@@ -1,0 +1,36 @@
+---
+- name: R8 100.x route status towards R6/R7
+  roles:
+    - Juniper.junos  
+  hosts: r8
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Running checks on r8
+      junos_command:
+        commands:
+          - show route 100.100.100.0 advertising-protocol bgp 6.6.6.6
+          - show route 100.100.100.0 advertising-protocol bgp 7.7.7.7
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines       
+- name: R5 now get 100.x route (after R7 configured as Route Reflector)
+  roles:
+    - Juniper.junos  
+  hosts: r5
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Running checks on r5
+      junos_command:
+        commands:
+          - show route receive-protocol bgp 7.7.7.7 extensive 
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines       

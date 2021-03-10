@@ -1,0 +1,156 @@
+---
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r1
+  roles:
+    - Juniper.junos 
+  connection: local
+  gather_facts: no
+      
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config: 
+        format: "text"
+        load: "set"
+        src: "r1_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response        
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r2
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r2_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r3
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r3_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r4
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r4_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r5
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r5_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r6
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r6_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r7
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r7_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response
+- name: Load and commit configuration data on a device running Junos OS
+  hosts: r8
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Merge configuration data from a file and commit
+      juniper_junos_config:
+        format: "text"
+        load: "set"
+        src: "r8_base.cfg"
+        comment: "Configuring op script with Ansible"
+        ignore_warning: true
+      register: response
+    - name: Print the response
+      debug:
+        var: response

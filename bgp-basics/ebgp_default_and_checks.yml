@@ -1,0 +1,67 @@
+---
+- name: "R4: Assign IP to interfaces ge-0/0/3 200.200.200.4/24" 
+  hosts: r4
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Configure op script"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set interfaces ge-0/0/3 unit 0 family inet address 200.200.200.4/24"   
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+
+- name: R2_Checking 200.x in neighbors route table (ibgp/ebgp)
+  hosts: r2
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name:  show route 200.200.200.0 receive-protocol bgp 30.30.30.4 
+      junos_command:
+        commands:
+          - show route 200.200.200.0
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 
+
+- name: R1_Checking 200.x in neighbors route table (ibgp/ebgp)
+  hosts: r1
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: show route 200.200.200.0 receive-protocol bgp 10.10.10.2
+      junos_command:
+        commands:
+          - show route 200.200.200.0
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines
+
+- name: R5_Checking 200.x in neighbors route table (ibgp/ebgp)
+  hosts: r5
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: show route 200.200.200.4 receive-protocol bgp 50.50.50.4
+      junos_command:
+        commands:
+          - show route 200.200.200.4
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines      

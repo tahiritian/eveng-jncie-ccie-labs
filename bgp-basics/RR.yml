@@ -1,0 +1,4 @@
+devices:
+  R7:
+    routing:
+    ip: 7.7.7.7          
