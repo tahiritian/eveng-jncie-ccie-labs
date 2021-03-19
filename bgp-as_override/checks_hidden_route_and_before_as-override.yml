@@ -1,0 +1,73 @@
+---
+- name: R4_Network 1.1.1.0/24 should **NOT** be in routing table.
+  roles:
+    - Juniper.junos  
+  hosts: r4
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: R4_ Routing Table before as-override applied to the lab.
+      junos_command:
+        commands:
+          - show route 
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines       
+- name: R1_Network 4.4.4.0/24 should **NOT** be in routing table.
+  roles:
+    - Juniper.junos  
+  hosts: r1
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: R1_ Routing Table before as-override applied to the lab.
+      junos_command:
+        commands:
+          - show route
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines       
+
+- name: R2_Check on R2, if network 1.1.1.0/24 is received? Hidden? Next-hop?
+  roles:
+    - Juniper.junos  
+  hosts: r2
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: outcome_R2 does receive 4.4.4.0/24, but 4.4.4.0/24 marked as hidden due to Next-hop is Unusable.
+      junos_command:
+        commands:
+          - show route receive-protocol bgp 12.12.12.1
+          - show route hidden extensive
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 
+    
+- name: R3_Check on R3, if network 1.1.1.0/24 is received? Hidden? Next-hop?
+  roles:
+    - Juniper.junos  
+  hosts: r3
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: outcome_R2 does receive 1.1.1.0/24, but 1.1.1.0/24 marked as hidden due to Next-hop is Unusable.
+      junos_command:
+        commands:
+          - show route receive-protocol bgp 34.34.34.4
+          - show route hidden extensive
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines    

@@ -1,0 +1,54 @@
+---
+- Multipath: Multipath Load Sharing Between eBGP and iBGP.  Install multiple to the forwarding table.
+- Graceful restart: Allows a routing device undergoing a restart to inform its adjacent neighbors and peers of its condition. Graceful restart is disabled by default. However, helper mode, the ability to assist a neighboring router attempting a graceful restart, is enabled by default.
+
+----- iBGP default behavior ------
+# WITHOUT LOOPBACK: Adjacency based on physical interface IP. Loopback reachable via OSPF (set protocols ospf area 0.0.0.0 interface lo0.0)
+# WITH LOOPBACK: Adjacency based on loopback IP. Router-ID used (set routing-options router-id x.x.x.x )
+
+— On R8: Create another loopback IP and advertise to neighbor R6/R7:
+  --- ** Using protocol ‘direct’ instead ‘BGP’ to avoid iBGP default behavior.
+  --- ** By default, only active BGP routes are advertised.
+
+The rules are as simple as follows:
+1. IBGP peers advertise routes received from EBGP peers to other IBGP peers.
+2. EBGP peers advertise routes learned from IBGP or EBGP peers to other EBGP peers.
+To be Noticed: IBGP peers do not advertise routes received from IBGP peers to other IBGP peers[unless it is functioning as a route reflector]. The purpose of the advertisement rules is to prevent routing loops on a BGP network.
+
+### IBGP peers do not advertise routes received from IBGP peers to other IBGP
+    /**  R8 advertise 100 network to ibgp neighbor (R6/R7) 
+root@R8> show route 100.100.100.0 advertising-protocol bgp 6.6.6.6 
+  Prefix                  Nexthop              MED     Lclpref    AS path
+* 100.100.100.0/32        Self                         100        I
+
+root@R8> show route 100.100.100.0 advertising-protocol bgp 7.7.7.7    
+  Prefix                  Nexthop              MED     Lclpref    AS path
+* 100.100.100.0/32        Self                         100        I
+  
+  // However R7/R6 does not advertised 100 network to other iBGP neighbor R5;
+     --- as well back to R8.
+root@R7> show route 100.100.100.0 advertising-protocol bgp 5.5.5.5 
+root@R6> show route 100.100.100.0 advertising-protocol bgp 5.5.5.5
+	---- empty.
+
+	
+### R7 configured as route reflector 	
+root@R7> show route 100.100.100.0 advertising-protocol bgp 5.5.5.5 
+  Prefix                  Nexthop              MED     Lclpref    AS path
+* 100.100.100.0/32        8.8.8.8                      100        I
+
+root@R5> show route receive-protocol bgp 7.7.7.7 extensive 
+* 100.100.100.0/32 -->  Nexthop: 8.8.8.8  Cluster list:  7.7.7.7 Originator ID: 8.8.8.8
+	--- default iBGP behavior is override by using Route Reflector.
+
+-------------------------------------
+	
+----- eBGP default behavior ------	EBGP peers advertise routes learned from IBGP or EBGP peers to other EBGP peers.
+eBGP peering use the same kind of  configuration as iBGP for Authentication and Loopback. 
+Basic eBGP peering config with loopback advertisement into eBGP.                      
+
+		-- On R2: Assign IP to an interface and check if IP is advertised to iBGP & eBGP peers
+		   root@R5> show route 200.200.200.0	
+
+---------
+                      

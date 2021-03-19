@@ -1,0 +1,55 @@
+---
+- name: "R2: hidden route fix" 
+  hosts: r2
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Resolve Next hop type Unusable issue using next-hop self on R2"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set policy-options policy-statement next-hop term t1 then next-hop self"  
+          - "set protocols bgp group ibgp export next-hop"  
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+
+- name: "R3: hidden route fix" 
+  hosts: r3
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Resolve Next hop type Unusable issue using next-hop self on R3"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set policy-options policy-statement next-hop term t1 then next-hop self"  
+          - "set protocols bgp group ibgp export next-hop"  
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+        
+- name: R2_Checking Hidden Route_NO hidden route anymore. 
+  hosts: r2
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name:  show route protocol bgp  
+      junos_command:
+        commands:
+          - show route protocol bgp  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 

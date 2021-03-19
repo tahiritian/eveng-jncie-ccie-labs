@@ -1,0 +1,99 @@
+---
+- name: "R2: as-Override" 
+  hosts: r2
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Configure op script"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set protocols bgp group ebgp as-override"   
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+
+- name: "R3: as-Override" 
+  hosts: r3
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: "Configure op script"
+      juniper_junos_config:
+        config_mode: "private"
+        load: "set"
+        lines:
+          - "set protocols bgp group ebgp as-override"   
+      register: response
+    - name: "Print the config changes"
+      debug:
+        var: response.diff_lines
+        
+- name: R1_Checking route 4.4.4.0/24 
+  hosts: r1
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name:  show route protocol bgp  
+      junos_command:
+        commands:
+          - show route protocol bgp  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 
+
+- name: R4_Checking route 1.1.1.0/24
+  hosts: r4
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name:  show route protocol bgp  
+      junos_command:
+        commands:
+          - show route protocol bgp  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 
+    
+- name: R2_Checking Options _Preference PeerAS Refresh As Override_ 
+  hosts: r2
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name:  show bgp neighbor 12.12.12.1   
+      junos_command:
+        commands:
+          - show bgp neighbor 12.12.12.1  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines 
+    
+- name: R3_Checking Options _Preference PeerAS Refresh As Override_ 
+  hosts: r3
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name:  show bgp neighbor 34.34.34.4    
+      junos_command:
+        commands:
+          - show bgp neighbor 34.34.34.4  
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines    
+        
