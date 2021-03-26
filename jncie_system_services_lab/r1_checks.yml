@@ -1,0 +1,28 @@
+---
+- name: Basic checks from R1
+  roles:
+    - Juniper.junos  
+  hosts: r1-lab
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: R1_Checks
+      junos_command:
+        commands:
+          - show interfaces ae0 terse
+          - ping 10.1.12.2 count 2
+          - show bgp summary
+          - show ospf neighbor
+          - show lacp interfaces
+          - show interfaces ae0 media
+          - show ntp associations
+          - show ntp ass
+          - show configuration policy-options prefix-list self | display inheritance
+          - show configuration policy-options prefix-list bgp | display inheritance
+          - show firewall filter re-protect 
+        display: text
+      register: output
+
+    - debug: var=output.stdout_lines       

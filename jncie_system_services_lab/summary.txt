@@ -1,0 +1,54 @@
+## Author: Mohammad Tahir ##
+
+Task 1.1: Primary hostname and user configuration
+Task 1.2: Aggregated interface configuration
+Task 1.3: Advanced aggregated interface configuration
+Task 1.4: Network integration - NTP
+Task 1.5: Network Integration - Configuration archival
+Task 1.6: Network Integration - Syslog
+Task 1.7: Static routing and jumbo frames support
+Task 1.8: SNMPv2 Configuration
+Task 1.9: Basic RE Protection
+Task 1.10: Advanced RE Protection
+Task 1: Management, DNS, RPD, NTP
+Task 2: FTP, RADIUS, User Account, Syslog
+Task 3: SNMPv3
+Task 4: Firewall Filters
+Task 5: DHCP
+Task 6: VRRP
+Task 7: Scripting
+
+
+**/ By default, there is one super user in the system, this is the “root” user. 
+
+**/ In JUNOS, every user has to belong to a class. A class can contain multiple users and these classes define what privileges are granted to every user that is a member of the class. 
+
+**/ Administrators can define their own custom classes. By default, there are four pre-defined classes.
+
+**/ Inside every JUNOS class, so-called permission-flags can be set. These permission flags indicate what commands are available to the users belonging to the class.
+
+**/ Apart from local password authentication, JUNOS also supports remote authentication methods such as TACACs+ and RADIUS. Remote authentication methods can be combined with local password authentication. Local password authentication usually serves as a last resort.
+
+**/ The members of the AE interface can be a statically configured to participate in the LAG or they can use the LACP protocol . 
+
+**/ JUNOS also offers a standard UNIX syslog service, which supports eight levels of message severities.
+
+**/ SNMP agent is disabled by default. All existing SNMP versions up to version 3 are supported.
+
+**/ Another integral part of JUNOS images are basic security features such as stateless firewall filters, control plane protection mechanisms and anti-spoofing mechanisms.
+
+**/ A standard firewall filter can be applied to JUNOS device’s loopback interface and by doing so, all traffic to and from the routing-engine can be controlled.
+
+**/ The uRPF feature works by comparing the source IP of each incoming IP packet against the routing table. The route towards the source IP of the packet has to correspond to the interface on which the packet was received. If this is not the case, the packet is dropped. In general, uRPF is enabled on interfaces facing to the “outside” of the AS and the feature can eliminate the need to configure long and error-prone anti-spoofing firewall filters.
+
+ 
+
+Do’s and Dont’s
+
+When listing separate allowed/denied commands in the user class configuration, always enclose them in double quotes “…”
+
+By default, the number of supported AE interfaces is 0. Don’t forget to enable the ‘aggregated-devices’ in the [ chassis ] configuration hierarchy.
+
+If the NTP ‘show ntp associations’ command does not show an NTP server selected for synchronization (indicated by the “*”), try running the operational mode command “set date ntp ”. This runs the BSD ntpdate utility, which queries the NTP server and sets the local time. 
+
+
